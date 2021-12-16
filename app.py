@@ -1,9 +1,20 @@
-from flask import Flask
+from flask import Flask, jsonify, request
+from zipfile import ZipFile
+import shutil
+from compress import *
+from os import getcwd
+
+PATH_FILE = "%s/Customs/Cars/" % (getcwd())
+
 app = Flask(__name__)
- 
-@app.route('/')
-def hello_name():
-   return 'Hello'
- 
-if __name__ == '__main__':
-   app.run()
+
+@app.route('/',methods = ['POST'])
+def zipdir():
+    # content_type = request.headers.get('Content-Type')
+    clean_dir()
+    jsonfile = request.json
+    JSONFILE = hydrate(jsonfile)
+    write_json(JSONFILE)
+    shutil.make_archive('Customs', 'zip', 'Customs')
+    response = {'message': 'success'}
+    return jsonify(response), 200
