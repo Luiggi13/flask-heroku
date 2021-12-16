@@ -16,7 +16,7 @@ def zipdir():
     jsonfile = request.json
     JSONFILE = hydrate(jsonfile)
     write_json(JSONFILE)
-    shutil.make_archive('./skins/Customs', 'zip', 'Customs')
+    shutil.make_archive('./skins/Customs-'+jsonfile["racer"].lower()+'-'+str(jsonfile["number"]), 'zip', 'Customs')
     response = {'message': 'success'}
     return jsonify(response), 200
 @app.route('/get-files/<path:path>',methods = ['GET','POST'])
@@ -26,7 +26,10 @@ def get_files(path):
     try:
         return send_from_directory(DOWNLOAD_PATH, path, as_attachment=True)
     except FileNotFoundError:
-        abort(404)
+        abort(404,{"error":"File not found"})
+   #  else:
+      #   return jsonify({"error":"File not found"})
+      
 
 @app.route('/list/',methods=['GET'])
 def listar():
