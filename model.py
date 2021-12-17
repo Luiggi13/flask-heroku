@@ -1,3 +1,4 @@
+# model
 def baseJson():
   OBJ_BASE = {
     "carGuid": 0,
