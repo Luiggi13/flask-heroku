@@ -11,7 +11,6 @@ app = Flask(__name__,static_url_path='')
 
 @app.route('/', methods = ['POST'])
 def zipdir():
-    # content_type = request.headers.get('Content-Type')
     clean_dir()
     jsonfile = request.json
     JSONFILE = hydrate(jsonfile)
@@ -27,8 +26,6 @@ def get_files(path):
         return send_from_directory(DOWNLOAD_PATH, path, as_attachment=True)
     except FileNotFoundError:
         abort(404,{"error":"File not found"})
-   #  else:
-      #   return jsonify({"error":"File not found"})
       
 
 @app.route('/list/',methods=['GET'])
