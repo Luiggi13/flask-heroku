@@ -21,9 +21,6 @@ def write_json(data, filename="custom.json"):
   print(PATH_FILE + data["name"]+ "-" +str(data["number"]) +'.json')
   with open(PATH_FILE + data["name"].lower()+ "-" +str(data["number"]) +'.json', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
-  # with open(filename, "w") as f:
-  #   json.dump(data, f, indent=2)
-
 
 def clean_dir():
   for filename in os.listdir(PATH_FILE):
@@ -48,10 +45,6 @@ def list_dir():
           if os.path.isfile(file_path) or os.path.islink(file_path):
               print(file_path)
               files.append({href:URL + filename})
-              # os.unlink(file_path)
-          elif os.path.isdir(file_path):
-              print('')
-              # shutil.rmtree(file_path)
       except Exception as e:
           print('Failed to delete %s. Reason: %s' % (file_path, e))
   data['total_files'] = len(files)
