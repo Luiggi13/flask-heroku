@@ -4,7 +4,7 @@ from os import getcwd
 
 PATH_FILE = "%s/Customs/Cars/" % (getcwd())
 SKINS_FOLDER = "%s/skins/" % (getcwd())
-URL = "https://flask-h-deploy.herokuapp.com/get-files/"
+URL = "https://flask-h-deploy.herokuapp.com/api/v1/get-files/"
 
 def hydrate(jsonObj: dict):
   customJson = {
