@@ -3,11 +3,20 @@ from zipfile import ZipFile
 import shutil
 from compress import *
 from os import abort, getcwd
+from flask_cors import CORS
 
 PATH_FILE = "%s/Customs/Cars/" % (getcwd())
 DOWNLOAD_PATH = "%s/skins/" % (getcwd())
 
 app = Flask(__name__,static_url_path='')
+CORS(app)
+cors = CORS(app,resources={
+    r"/*": {
+        "origins":"*",
+        "methods": ["OPTIONS", "GET", "POST"],
+        "allow_headers": ["Authorization", "Content-Type"]
+    }
+})
 
 @app.route('/', methods = ['POST'])
 def zipdir():
