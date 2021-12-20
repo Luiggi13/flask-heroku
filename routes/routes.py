@@ -1,17 +1,24 @@
+from io import BytesIO
+from flask.wrappers import Response
+import requests
 from flask import Flask, jsonify, request, send_from_directory
 from flask import Blueprint
 from os import abort, getcwd
 from handlers.compress import *
 from models.model import carList, carNotFound
+from PIL import Image
+from werkzeug.datastructures import FileStorage
 
 API_PREFIX = '/api/v1'
 PATH_FILE = "%s/Customs/Cars/" % (getcwd())
+UPLOAD_FOLDER = "%s/uploads/" % (getcwd())
 DOWNLOAD_PATH = "%s/skins/" % (getcwd())
 
 cars_api = Blueprint('cars_api', __name__)
 apifile_api = Blueprint('apifile', __name__)
 files_api = Blueprint('files_api', __name__)
 health_api = Blueprint('health_api', __name__)
+img_api = Blueprint('img_api', __name__)
 
 #CARS ENDPOINT
 @cars_api.route(API_PREFIX +'/cars/',methods=['GET'])
@@ -59,3 +66,17 @@ def listar():
 @health_api.route(API_PREFIX + '/health/',methods=['GET'])
 def isAlive():    
     return jsonify({"isAlive":"true"})
+
+@img_api.route(API_PREFIX + '/img/',methods=['POST'])
+def process_img():    
+    if request.method == "POST":
+        if request.files:
+            image = request.files["image"]
+            image.save(os.path.join(DOWNLOAD_PATH, image.filename))
+            print("Image saved on: " + UPLOAD_FOLDER + image.filename)
+        response = requests.post('http://api.resmush.it/ws.php?img=http://localhost:5000/api/v1/get-files/TT.png',headers={"Content-Type":"application/json"})
+        print('========response==========')
+        print(response.text)
+        print('========response==========')
+    return jsonify(response.text)
+    # return jsonify({'msg': 'success', 'filename': UPLOAD_FOLDER + image.filename})
