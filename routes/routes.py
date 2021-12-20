@@ -74,7 +74,7 @@ def process_img():
             image = request.files["image"]
             image.save(os.path.join(DOWNLOAD_PATH, image.filename))
             print("Image saved on: " + UPLOAD_FOLDER + image.filename)
-        response = requests.post('http://api.resmush.it/ws.php?img=http://localhost:5000/api/v1/get-files/TT.png',headers={"Content-Type":"application/json"})
+        response = requests.post('http://api.resmush.it/ws.php?img='+UPLOAD_FOLDER + image.filename,headers={"Content-Type":"application/json"})
         print('========response==========')
         print(response.text)
         print('========response==========')
