@@ -14,7 +14,7 @@ cors = CORS(app,resources={
     r"/*": {
         "origins":"*",
         "methods": ["OPTIONS", "GET", "POST"],
-        "allow_headers": ["Authorization", "Content-Type"]
+        "allow_headers": ['*']
     }
 })
 
