@@ -13,6 +13,7 @@ API_PREFIX = '/api/v1'
 PATH_FILE = "%s/Customs/Cars/" % (getcwd())
 UPLOAD_FOLDER = "%s/uploads/" % (getcwd())
 DOWNLOAD_PATH = "%s/skins/" % (getcwd())
+IMAGES_FOLDER = 'https://flask-h-deploy.herokuapp.com/api/v1/get-files/'
 
 cars_api = Blueprint('cars_api', __name__)
 apifile_api = Blueprint('apifile', __name__)
@@ -74,7 +75,7 @@ def process_img():
             image = request.files["image"]
             image.save(os.path.join(DOWNLOAD_PATH, image.filename))
             print("Image saved on: " + UPLOAD_FOLDER + image.filename)
-        response = requests.post('http://api.resmush.it/ws.php?img='+UPLOAD_FOLDER + image.filename,headers={"Content-Type":"application/json"})
+        response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
         print('========response==========')
         print(response.text)
         print('========response==========')
