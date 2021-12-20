@@ -7,7 +7,7 @@ app.register_blueprint(cars_api)
 app.register_blueprint(apifile_api)
 app.register_blueprint(files_api)
 app.register_blueprint(health_api)
-# app.register_blueprint(img_api)
+app.register_blueprint(img_api)
 CORS(app)
 
 cors = CORS(app,resources={
