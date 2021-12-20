@@ -1,4 +1,3 @@
-from flask import jsonify
 import json
 import os, shutil
 from os import getcwd
@@ -8,7 +7,6 @@ SKINS_FOLDER = "%s/skins/" % (getcwd())
 URL = "https://flask-h-deploy.herokuapp.com/get-files/"
 
 def hydrate(jsonObj: dict):
-  filename = "test.json"
   customJson = {
     "name": jsonObj["racer"],
     "number": jsonObj["number"]
@@ -34,7 +32,6 @@ def clean_dir():
           print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 def list_dir():
-  count = 0;
   data = {'total_files':0,'all_files': None}
   files = []
   href:str='href';
@@ -50,8 +47,8 @@ def list_dir():
   data['total_files'] = len(files)
   data['all_files'] = files
   return data
+
 def deleteSkins():
-  files = []
   for filename in os.listdir(SKINS_FOLDER):
       file_path = os.path.join(SKINS_FOLDER, filename)
       try:
