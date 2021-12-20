@@ -32,3 +32,18 @@ def baseJson():
     "bannerTemplateKey": 0
   }
   return OBJ_BASE
+
+def carList():
+  CARSBASE = [
+    {
+      "id_car" :1,
+      "name_car": "BMW M6 GT3"
+    }
+  ]
+  return CARSBASE
+
+def carNotFound():
+  NOTFOUNDCAR = {
+      "error": "There aren\'t any car with this id"
+    }
+  return NOTFOUNDCAR
