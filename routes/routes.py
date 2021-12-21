@@ -10,6 +10,8 @@ from handlers.compress import *
 from models.model import carList, carNotFound
 from PIL import Image
 from werkzeug.datastructures import FileStorage
+from handlers.custom_funcs import switch_statement
+
 
 API_PREFIX = '/api/v1'
 PATH_FILE = "%s/Customs/Cars/" % (getcwd())
@@ -39,8 +41,8 @@ def listarCars(idCar):
 #FILES ENDPOINTS
 @apifile_api.route(API_PREFIX +'/clear_all/',methods=['DELETE'])
 def deleteFiles():
-   deleteSkins()
-   return jsonify({'delete':'true'})
+    deleteSkins()
+    return jsonify({'delete':'true'})
 
 @files_api.route(API_PREFIX +'/', methods = ['POST'])
 def zipdir():
@@ -59,11 +61,11 @@ def get_files(path):
         return send_from_directory(DOWNLOAD_PATH, path, as_attachment=True)
     except FileNotFoundError:
         abort(404,{"error":"File not found"})
-      
+
 
 @files_api.route(API_PREFIX +'/list/',methods=['GET'])
 def listar():
-   return jsonify(list_dir())
+        return jsonify(list_dir())
 
 #ALIVE
 @health_api.route(API_PREFIX + '/health/',methods=['GET'])
@@ -76,8 +78,7 @@ def process_img():
         if request.files:
             image = request.files["image"]
             image.save(os.path.join(DOWNLOAD_PATH, image.filename))
-        # response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
-        print('===========')
-        print(imghdr.what(DOWNLOAD_PATH + image.filename))
-    return jsonify({"type":"true"})
-    # return jsonify({'msg': 'Image reduced', 'filename': json.loads(response.text)['dest']})
+            if switch_statement(imghdr.what(DOWNLOAD_PATH + image.filename)) == 0:
+                return jsonify({"error":"Invalid file"})
+        response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
+    return jsonify({'msg': 'Image reduced', 'filename': json.loads(response.text)['dest']})
