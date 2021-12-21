@@ -1,6 +1,7 @@
 from io import BytesIO
 from flask.wrappers import Response
 import requests
+import json
 from flask import Flask, jsonify, request, send_from_directory
 from flask import Blueprint
 from os import abort, getcwd
@@ -68,16 +69,11 @@ def listar():
 def isAlive():    
     return jsonify({"isAlive":"true"})
 
-@img_api.route(API_PREFIX + '/img/',methods=['POST'])
+@img_api.route(API_PREFIX + '/convert/',methods=['POST'])
 def process_img():    
     if request.method == "POST":
         if request.files:
             image = request.files["image"]
             image.save(os.path.join(DOWNLOAD_PATH, image.filename))
-            print("Image saved on: " + UPLOAD_FOLDER + image.filename)
         response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
-        print('========response==========')
-        print(response.text)
-        print('========response==========')
-    return jsonify(response.text)
-    # return jsonify({'msg': 'success', 'filename': UPLOAD_FOLDER + image.filename})
+    return jsonify({'msg': 'Image reduced', 'filename': json.loads(response.text)['dest']})
