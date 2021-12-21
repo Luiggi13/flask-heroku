@@ -1,6 +1,7 @@
 from io import BytesIO
 from flask.wrappers import Response
 import requests
+import imghdr
 import json
 from flask import Flask, jsonify, request, send_from_directory
 from flask import Blueprint
@@ -75,5 +76,8 @@ def process_img():
         if request.files:
             image = request.files["image"]
             image.save(os.path.join(DOWNLOAD_PATH, image.filename))
-        response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
-    return jsonify({'msg': 'Image reduced', 'filename': json.loads(response.text)['dest']})
+        # response = requests.post('http://api.resmush.it/ws.php?img='+IMAGES_FOLDER + image.filename,headers={"Content-Type":"application/json"})
+        print('===========')
+        print(imghdr.what(DOWNLOAD_PATH + image.filename))
+    return jsonify({"type":"true"})
+    # return jsonify({'msg': 'Image reduced', 'filename': json.loads(response.text)['dest']})
