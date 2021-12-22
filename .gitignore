@@ -141,5 +141,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 routes/__pycache__/
+models/__pycache__/
+handlers/__pycache__/
 
 __pycache__/
