@@ -1,16 +1,13 @@
-from io import BytesIO
-from flask.wrappers import Response
+from os import abort, getcwd
+import flask
+from flask import jsonify, request, send_from_directory
+from flask import Blueprint
+import json
 import requests
 import imghdr
-import json
-from flask import Flask, jsonify, request, send_from_directory
-from flask import Blueprint
-from os import abort, getcwd
 from handlers.compress import *
-from models.model import carList, carNotFound
-from PIL import Image
-from werkzeug.datastructures import FileStorage
 from handlers.custom_funcs import switch_statement
+from models.model import carList, carNotFound
 
 
 API_PREFIX = '/api/v1'
@@ -33,11 +30,10 @@ def listarCarsCompleted():
 @cars_api.route(API_PREFIX +'/cars/<idCar>',methods=['GET'])
 def listarCars(idCar):    
     for element in carList():
-        if (str(element['id_car']) == str(idCar)):
+        if (str(element['id_car']) == idCar):
             return jsonify(element)
-        else:
-            return jsonify(carNotFound())
-    return jsonify(carList())
+    return jsonify(carNotFound())
+
 #FILES ENDPOINTS
 @apifile_api.route(API_PREFIX +'/clear_all/',methods=['DELETE'])
 def deleteFiles():
@@ -47,16 +43,15 @@ def deleteFiles():
 @files_api.route(API_PREFIX +'/', methods = ['POST'])
 def zipdir():
     clean_dir()
-    jsonfile = request.json
-    JSONFILE = hydrate(jsonfile)
+    JSONFILE = hydrate(request.json)
     write_json(JSONFILE)
-    shutil.make_archive('./skins/Customs-'+jsonfile["racer"].lower()+'-'+str(jsonfile["number"]), 'zip', 'Customs')
-    response = {'message': 'success'}
-    return jsonify(response), 200
+    FILENAME = './skins/Customs-' + request.json["racer"].lower() + '-' + str(request.json["number"])
+    shutil.make_archive(FILENAME, 'zip', 'Customs')
+    return flask.send_file(FILENAME + '.zip',as_attachment=True)
+
 @files_api.route(API_PREFIX +'/get-files/<path:path>',methods = ['GET','POST'])
 def get_files(path):
 
-    """Download a file."""
     try:
         return send_from_directory(DOWNLOAD_PATH, path, as_attachment=True)
     except FileNotFoundError:
@@ -72,6 +67,7 @@ def listar():
 def isAlive():    
     return jsonify({"isAlive":"true"})
 
+#IMAGE PROCESSING TO REDUCE FILESIZE
 @img_api.route(API_PREFIX + '/convert/',methods=['POST'])
 def process_img():    
     if request.method == "POST":
