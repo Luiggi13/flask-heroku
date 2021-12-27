@@ -6,7 +6,7 @@ import json
 import requests
 import imghdr
 from handlers.compress import *
-from handlers.custom_funcs import switch_statement
+from handlers.custom_funcs import callLaps, lapTime, switch_statement
 from models.model import carList, carNotFound
 
 
@@ -23,6 +23,11 @@ health_api = Blueprint("health_api", __name__)
 img_api = Blueprint("img_api", __name__)
 
 # CARS ENDPOINT
+@cars_api.route(API_PREFIX + "/time/", methods=["GET"])
+def calculate_time():
+    return callLaps()
+    # return jsonify({"success":"true"})
+
 @cars_api.route(API_PREFIX + "/cars/", methods=["GET"])
 def listarCarsCompleted():
     return jsonify(carList())
